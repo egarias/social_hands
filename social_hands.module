@@ -1,0 +1,144 @@
+<?php
+define('SOCIAL_HANDS_SERVER_URL', 'http://server.social-hands.com');
+function social_hands_init(){
+//	drupal_add_js('http://cdnjs.cloudflare.com/ajax/libs/mustache.js/0.8.1/mustache.min.js', 'external');
+}
+function social_hands_permission() {
+	return array(
+	    'administer Social Hands' => array(
+	      'title' => t('administer Social Hands'),
+	    ),  
+	);
+}
+function social_hands_keys(){
+	return array(
+		'full'	=> array('content'	=> 'social_hands_detail', 'class' => 'social-hands-clixd',),
+		'teaser'=> array('content'	=> 'social_hands_count', 'class' => 'social-hands-clixc',),		
+	);	
+}
+function social_hands_node_view($node, $view_mode, $langcode) {
+	$options = array('full', 'teaser');
+	$keys_view = social_hands_keys();
+	$options = variable_get('social_hands_options', array());
+//	dsm($options);
+	if (isset($options[$node->type])) {
+//		dsm(($options[$node->type]));
+		
+		if (in_array($view_mode, $options[$node->type]['viewmode'], TRUE)) {
+			dsm($view_mode);
+			drupal_add_js('sites/all/modules/social_hands/js/social.js', 'file');
+			$user = variable_get('social_hands_client');
+			$node->content[$keys_view[$view_mode]['content']] = array(
+				  '#weight' => 10,
+				  '#markup' => '<div class="'.$keys_view[$view_mode]['class'] .'" id="'.$user.'"><div class="social-hands-nid" id="'.$node->nid.'"></div></div>',
+				  '#options' => array(
+					  'attributes' => array(),
+					  'html' => TRUE
+				  ),
+			);
+		}
+	 }
+}
+
+function social_hands_tags($nid, $view_mode="teaser"){
+	$keys_view = social_hands_keys();
+	$user = variable_get('social_hands_client');
+	drupal_add_js('sites/all/modules/social_hands/js/social.js', 'file');
+	return '<div class="'.$keys_view[$view_mode]['class'] .'" id="'.$user.'"><div class="social-hands-nid" id="'.$nid.'"></div></div>';	
+}
+
+function social_hands_menu() {
+	$items = array();
+	$items['orca/stream'] = array(
+		'page callback' 	=> 'social_hands_stream',
+		'access callback' 	=> TRUE,
+		'type' 				=> MENU_CALLBACK,   
+	);
+	$items['admin/structure/socialhands'] = array(
+		'title' 			=> 'Social Hands',
+		'description' 		=> 'Manage Social Hands',
+		'theme callback'	=> 'admin_theme',
+		'page callback' 	=> 'drupal_get_form',
+		'page arguments'	=> array('social_hands_configuser_form'),
+		'access arguments' 	=> array('administer Social Hands'),
+		'type' 				=> MENU_NORMAL_ITEM, 
+	);
+
+	return $items;
+}
+
+function social_hands_window(){
+	$url = SOCIAL_HANDS_SERVER_URL;
+	$client = variable_get('social_hands_client', '');
+	if ($client == '') return drupal_get_form('social_hands_configuser_form');
+	$html =<<<HTML
+		<div class="social-users">
+			<iframe src="$url/window/$client/manage" width="100%" height="600px" frameborder=0 scrolling="auto" id="socialusers"></iframe>
+		</div>	
+HTML;
+	return $html;
+}
+function social_hands_configuser_form($form, &$form_state) {
+	$types = node_type_get_types();
+	$options = variable_get('social_hands_options', array());
+	dsm($options);
+	$form['client'] = array(
+		 '#type' 			=> 'textfield',
+		 '#title' 			=> t('Configuration Client'),
+		 '#default_value' 	=> variable_get('social_hands_client', ''),
+		 '#description' 	=> t('Get your code at ').'<a href="'.SOCIAL_HANDS_SERVER_URL.'" target="_blank">Social Hands</a>',
+		 '#required' 		=> TRUE,
+	);
+	$form['options'] = array(
+  		'#type' => 'fieldset', 
+		'#title' => t('View Rules'),
+		'#collapsible' => TRUE, 
+  		'#collapsed' => TRUE,
+  		'#tree' => TRUE,
+	);	
+	foreach($types as $ind=>$type){
+		$form['options'][$ind] = array(
+	  		'#type' => 'fieldset', 
+			'#title' => t('Content type '.$ind),
+			'#collapsible' => TRUE, 
+	  		'#collapsed' => TRUE,
+	  		'#tree' => TRUE,
+		);
+		$default = isset($options[$ind])? (array) $options[$ind]['viewmode']: array('1' => 0, '2' => 0, );
+		$form['options'][$ind]['viewmode'] = array(
+			'#type' 			=> 'checkboxes',
+			'#title' 			=> t('View Mode'),
+//			'#description' 		=> t('Options to use with your account.'),
+			'#default_value'	=> $default,		 
+			'#options' 			=> array('full' => 'Full', 'teaser' => 'Teaser', ),		 
+	//		'#required' 		=> TRUE,
+		);		
+	}		  	 
+	$form['submit'] = array('#type' => 'submit', '#value' => t('Submit'));
+	return $form;
+}
+function social_hands_configuser_form_validate($form, &$form_state) {
+	$url = SOCIAL_HANDS_SERVER_URL.'/checkclient/' . $form_state['values']['client'];
+	if (!$data = social_hands_http_request($url)) form_set_error('client', t('Connection error retry later'));
+	$client = json_decode($data);
+	if ($client->check == 0) form_set_error('client', t('Client Code invalid'));
+}
+function social_hands_configuser_form_submit($form, &$form_state) {
+	dsm($form_state);
+	variable_set('social_hands_client', $form_state['values']['client']);
+	variable_set('social_hands_options', $form_state['values']['options']);
+	drupal_set_message(t('Your configuration has been saved.'));
+}
+
+function social_hands_http_request($url = '', $options = array()){
+    $result = drupal_http_request($url, $options);
+    if (
+        (isset($result->error) && ($result->error == HTTP_REQUEST_TIMEOUT)) || 
+        ((isset($result->code)) && ($result->code == HTTP_REQUEST_TIMEOUT)) || 
+        ((isset($result->status_message)) && ($result->status_message != "OK"))
+        )
+        return FALSE;
+		dsm($result);
+    return $result->data;
+}
+

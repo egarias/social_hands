@@ -1,0 +1,12 @@
+name = Social Hands
+description = Client Social Hands
+package = ORCA
+
+files[] = social_hands.module
+scripts[] = js/social.js
+stylesheets[all][] = css/social.css
+
+version = "7.x-3.x-dev"
+core = "7.x"
+project = "orca"
+datestamp = "1340756315"

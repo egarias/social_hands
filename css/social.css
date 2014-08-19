@@ -1,0 +1,88 @@
+/**
+ * @file
+ * Styles for the media library.
+ */
+
+.social-hands-clixd {margin: 20px 0;}
+.social-hands-clixd .totalcount .shcomment{ 
+	background: url("../images/Facebook_24.png") no-repeat scroll 0 0 transparent;
+    padding: 3px 30px;
+}
+.social-hands-clixd .totalcount .shlikes{ 
+	background: url("../images/Like_24.png") no-repeat scroll 0 0 transparent;
+    padding: 3px 30px;
+}
+.social-hands-clixd .totalcount .shtweets{ 
+	background: url("../images/Twitter_24.png") no-repeat scroll 0 0 transparent;
+    padding: 3px 30px;
+}
+.social-hands-clixd .totalcount .shshares{ 
+	background: url("../images/Share.png") no-repeat scroll 0 0 transparent;
+    padding: 3px 30px;
+}
+.social-hands-clixd ul.uiList {padding: 0;}
+.social-hands-clixd ul li {
+	border-bottom: 1px dotted #666666;
+    clear: both;
+    list-style: none outside none;
+    margin: 20px 0;
+}
+.social-hands-clixd .image_link {width: 50px; margin-right: 10px; float: left;}
+.social-hands-clixd a:link {text-decoration: none; color: #3B5998;}
+.social-hands-clixd .commentDate {   
+	color: #666666;
+    font-size: 0.8em;
+}
+.social-hands-clixd div.commentbody {margin-left: 60px;}
+.social-hands-clixd img {
+	border: 2px solid #CCCCCC;
+}
+.social-hands-clixd .comment-header{
+	border-bottom: 1px solid #cccccc;
+    border-top: 1px solid #cccccc;
+    padding: 5px;
+    background: #fafafa;
+}
+.social-hands-clixd .comentar { 
+	background: none repeat scroll 0 0 #E7EBF2;
+    border: 1px solid #C4CDE0;
+    padding: 5px;
+}
+.social-hands-clixd span.count {padding: 0 10px;}
+.social-hands-clixd .facebook {
+    background: url("../images/social_balloon-14.png") no-repeat scroll 0 0 transparent;
+    color: #666666;
+    font-size: 0.8em;
+    height: 35px;
+    padding: 5px 0 0 35px;
+}
+.social-hands-clixd .twitter {
+    background: url("../images/social_balloon-05.png") no-repeat scroll 0 0 transparent;
+    color: #666666;
+    font-size: 0.8em;
+    height: 35px;
+    padding: 5px 0 0 35px;
+}
+.social-hands-clixc .social-group {display: inline-block;}
+.social-cli-users li div {display: inline; padding: 5px;}
+.social-cli-users li.header {font-weight: bold; }
+.orca-social-count{font-family: Arial; font-size: 12px; padding: 0;} 
+.orca-social-count .social_text {margin: 0 10px;}
+#panel-inicio .node-destacados .social_hands {padding-top: 207px;}
+.orca-social-count .shlike {background: url('../images/like.png') no-repeat; height: 16px;}
+.orca-social-count .shcomment {background: url('../images/facebook1.png') no-repeat; height: 16px;}
+.orca-social-count .shtweets {background: url('../images/twitter1.png') no-repeat; height: 16px;}
+
+.orca-social-stream {width: 300px;}
+.orca-social-stream .stream-item {box-shadow: 1px 1px 1px #AAA; margin: 10px 0; background: #FEFEFE;}
+.orca-social-stream .node-render .media img {width: 100px; float: left; margin: 0 10px 0 3px;}
+body.html .orca-social-stream .node-render a:link {color: #080808 !important;}
+.orca-social-stream .node-render .autor {color: #666;}
+.orca-social-stream .field-name-field-entradilla {text-align: left !important;}
+.orca-social-stream li {list-style:none; background: none repeat scroll 0 0 #D61E1E;  padding: 5px; color: #fefefe;}
+body.html .orca-social-stream li a:link {color: #fefefe !important; font-weight: bold; text-decoration: underline;}
+.orca-social-stream li img {width: 50px; float:left; margin: 0 10px 0 3px; box-shadow: 1px 1px 2px #EEE;}
+.orca-social-stream h3 {font-size: 1em; margin: 2px;}
+.orca-social-stream .facebook {background: url("../images/social_balloon-14.png") no-repeat scroll 0 0 transparent; padding: 5px 0 0 35px;}
+.orca-social-stream .twitter {background: url("../images/social_balloon-05.png") no-repeat scroll 0 0 transparent; padding: 5px 0 0 35px;}
+.orca-social-stream .commentDate {height: 30px;}
